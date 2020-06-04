@@ -4,12 +4,18 @@ import com.ua.foxminded.task_11.dao.impl.TimeSlotDaoImpl;
 import com.ua.foxminded.task_11.model.Group;
 import com.ua.foxminded.task_11.model.Lector;
 import com.ua.foxminded.task_11.model.TimeSlot;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Component
+@Scope(value = "session")
 public class TimeTableServices {
-    private TimeSlotDaoImpl timeSlotDao = new TimeSlotDaoImpl();
+    @Autowired
+    private TimeSlotDaoImpl timeSlotDao;
 
     public List<TimeSlot> getTimeSlots() {
         return timeSlotDao.getAll();

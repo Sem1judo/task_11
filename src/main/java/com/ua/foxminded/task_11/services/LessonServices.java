@@ -3,12 +3,16 @@ package com.ua.foxminded.task_11.services;
 import com.ua.foxminded.task_11.dao.impl.LessonDaoImpl;
 import com.ua.foxminded.task_11.model.Lector;
 import com.ua.foxminded.task_11.model.Lesson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class LessonServices {
 
-    private LessonDaoImpl lessonDao = new LessonDaoImpl();
+    @Autowired
+    private LessonDaoImpl lessonDao;
 
     public List<Lesson> getLessons() {
         return lessonDao.getAll();

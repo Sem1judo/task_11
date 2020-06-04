@@ -1,11 +1,15 @@
 package com.ua.foxminded.task_11.model;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class TimeSlot {
     private long timeSlotId;
+    @NotNull
     private LocalDateTime startLesson;
+    @NotNull
     private LocalDateTime endLesson;
     private Group group;
     private Lector lector;

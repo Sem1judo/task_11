@@ -1,9 +1,13 @@
 package com.ua.foxminded.task_11.model;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class Lesson {
     private long lessonId;
+    @NotNull
+    @Size(min=3, max=50)
     private String name;
     private Lector lector;
 

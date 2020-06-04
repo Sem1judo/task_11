@@ -1,12 +1,18 @@
 package com.ua.foxminded.task_11.model;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class Lector {
 
     private Long lectorId;
     private Long facultyId;
+    @NotNull
+    @Size(min=3, max=50)
     private String firstName;
+    @NotNull
+    @Size(min=3, max=50)
     private String lastName;
 
     public Lector() {

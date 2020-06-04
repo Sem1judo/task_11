@@ -4,11 +4,17 @@ import com.ua.foxminded.task_11.dao.impl.FacultyDaoImpl;
 import com.ua.foxminded.task_11.model.Faculty;
 import com.ua.foxminded.task_11.model.Group;
 import com.ua.foxminded.task_11.model.Lector;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 
 import java.util.List;
 
+@Component
 public class FacultyServices {
-    private FacultyDaoImpl facultyDao = new FacultyDaoImpl();
+
+    @Autowired
+    private FacultyDaoImpl facultyDao;
 
     public List<Faculty> getFaculties() {
         return facultyDao.getAll();

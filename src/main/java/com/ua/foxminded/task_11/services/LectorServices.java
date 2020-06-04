@@ -2,12 +2,16 @@ package com.ua.foxminded.task_11.services;
 
 import com.ua.foxminded.task_11.dao.impl.LectorDaoImpl;
 import com.ua.foxminded.task_11.model.Lector;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Component
 public class LectorServices {
-    private LectorDaoImpl lectorDao = new LectorDaoImpl();
+    @Autowired
+    private LectorDaoImpl lectorDao;
 
     public List<Lector> getLectors() {
         return lectorDao.getAll();

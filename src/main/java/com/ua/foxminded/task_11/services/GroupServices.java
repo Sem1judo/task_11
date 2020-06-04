@@ -2,12 +2,16 @@ package com.ua.foxminded.task_11.services;
 
 import com.ua.foxminded.task_11.dao.impl.GroupDaoImpl;
 import com.ua.foxminded.task_11.model.Group;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 import java.util.List;
 
+@Component
 public class GroupServices {
-    private GroupDaoImpl groupDao = new GroupDaoImpl();
+    @Autowired
+    private GroupDaoImpl groupDao;
 
     public List<Group> getGroups() {
         return groupDao.getAll();
