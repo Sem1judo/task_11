@@ -1,6 +1,8 @@
 package com.ua.foxminded.task_11.model;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -8,11 +10,17 @@ public class Lector {
 
     private Long lectorId;
     private Long facultyId;
-    @NotNull
-    @Size(min=3, max=50)
+    @NotBlank
+    @Size(min = 3, max = 50,
+            message = "First name must be between 3 and 20 characters long")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$",
+            message = "First name must be alphanumeric with no spaces")
     private String firstName;
-    @NotNull
-    @Size(min=3, max=50)
+    @NotBlank
+    @Size(min = 3, max = 50,
+            message = "Last name must be between 3 and 20 characters long")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$",
+            message = "Last name must be alphanumeric with no spaces")
     private String lastName;
 
     public Lector() {

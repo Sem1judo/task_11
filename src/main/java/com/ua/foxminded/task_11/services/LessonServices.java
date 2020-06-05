@@ -6,7 +6,9 @@ import com.ua.foxminded.task_11.model.Lesson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class LessonServices {
@@ -14,11 +16,11 @@ public class LessonServices {
     @Autowired
     private LessonDaoImpl lessonDao;
 
-    public List<Lesson> getLessons() {
-        return lessonDao.getAll();
+    public Optional<List<Lesson>> getLessons() {
+        return Optional.ofNullable(lessonDao.getAll());
     }
 
-    public void createNewLesson(String nameLesson, Lector lector) {
+    public void createNewLesson(@Valid String nameLesson, Lector lector) {
         Lesson lesson = new Lesson();
         lesson.setName(nameLesson);
         lesson.setLector(lector);
@@ -29,11 +31,11 @@ public class LessonServices {
         lessonDao.delete(id);
     }
 
-    public Lesson getLesson(long id) {
-        return lessonDao.getById(id);
+    public Optional<Lesson> getLesson(long id) {
+        return Optional.ofNullable(lessonDao.getById(id));
     }
 
-    public void updateLesson(long id, String nameLesson, Lector lector) {
+    public void updateLesson(long id,@Valid String nameLesson, Lector lector) {
         Lesson lesson = lessonDao.getById(id);
         lesson.setName(nameLesson);
         lesson.setLector(lector);

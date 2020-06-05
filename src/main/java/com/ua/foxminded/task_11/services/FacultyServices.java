@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class FacultyServices {
@@ -16,11 +18,11 @@ public class FacultyServices {
     @Autowired
     private FacultyDaoImpl facultyDao;
 
-    public List<Faculty> getFaculties() {
-        return facultyDao.getAll();
+    public Optional<List<Faculty>> getFaculties() {
+        return Optional.ofNullable(facultyDao.getAll());
     }
 
-    public void createNewFaculty(String nameFaculty, List<Group> groups, List<Lector> lectors) {
+    public void createNewFaculty(@Valid String nameFaculty, List<Group> groups, List<Lector> lectors) {
         Faculty faculty = new Faculty();
         faculty.setName(nameFaculty);
         faculty.setGroups(groups);
@@ -32,8 +34,8 @@ public class FacultyServices {
         facultyDao.delete(id);
     }
 
-    public Faculty getFaculty(long id) {
-        return facultyDao.getById(id);
+    public Optional<Faculty> getFaculty(long id) {
+        return Optional.ofNullable(facultyDao.getById(id));
     }
 
     public void updateFaculty(long id, String nameFaculty, List<Group> groups, List<Lector> lectors) {

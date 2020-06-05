@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Scope(value = "session")
@@ -17,8 +19,8 @@ public class TimeTableServices {
     @Autowired
     private TimeSlotDaoImpl timeSlotDao;
 
-    public List<TimeSlot> getTimeSlots() {
-        return timeSlotDao.getAll();
+    public Optional<List<TimeSlot>> getTimeSlots() {
+        return Optional.ofNullable(timeSlotDao.getAll());
     }
 
     public void createNewTimeSlot(LocalDateTime startLesson, LocalDateTime endLesson, Lector lector, Group group) {
@@ -34,11 +36,11 @@ public class TimeTableServices {
         timeSlotDao.delete(id);
     }
 
-    public TimeSlot getTimeSlot(long id) {
-        return timeSlotDao.getById(id);
+    public Optional<TimeSlot> getTimeSlot(long id) {
+        return Optional.ofNullable(timeSlotDao.getById(id));
     }
 
-    public void updateTimeSlot(long id, LocalDateTime startLesson, LocalDateTime endLesson, Lector lector, Group group) {
+    public void updateTimeSlot(long id, @Valid LocalDateTime startLesson, @Valid LocalDateTime endLesson, Lector lector, Group group) {
         TimeSlot timeSlot = timeSlotDao.getById(id);
         timeSlot.setStartLesson(startLesson);
         timeSlot.setEndLesson(endLesson);

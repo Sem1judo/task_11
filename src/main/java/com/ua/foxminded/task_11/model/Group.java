@@ -1,6 +1,8 @@
 package com.ua.foxminded.task_11.model;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -8,8 +10,11 @@ public class Group {
 
     private long groupId;
     private long facultyId;
-    @NotNull
-    @Size(min=3, max=50)
+    @NotBlank
+    @Size(min=3, max=50,
+            message="Group name must be between 3 and 20 characters long")
+    @Pattern(regexp="^[a-zA-Z0-9]+$",
+            message="Group name must be alphanumeric with no spaces")
     private String name;
 
     public Group() {

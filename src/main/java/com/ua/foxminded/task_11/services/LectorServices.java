@@ -5,19 +5,21 @@ import com.ua.foxminded.task_11.model.Lector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class LectorServices {
     @Autowired
     private LectorDaoImpl lectorDao;
 
-    public List<Lector> getLectors() {
-        return lectorDao.getAll();
+    public Optional<List<Lector>> getLectors() {
+        return Optional.ofNullable(lectorDao.getAll());
     }
 
-    public void createNewLector(String firstName,String lastName, long facultyId) {
+    public void createNewLector(@Valid String firstName, @Valid String lastName, long facultyId) {
         Lector lector = new Lector();
         lector.setFirstName(firstName);
         lector.setLastName(lastName);
@@ -26,22 +28,21 @@ public class LectorServices {
     }
 
     public void deleteLector(long id) {
-
         lectorDao.delete(id);
     }
 
-    public Lector getLector(long id) {
-        return lectorDao.getById(id);
+    public Optional<Lector> getLector(long id) {
+        return Optional.ofNullable(lectorDao.getById(id));
     }
 
-    public void updateLector(long id, String firstName,String lastName, long facultyId) {
+    public void updateLector(long id,@Valid  String firstName, @Valid String lastName, long facultyId) {
             Lector lector = lectorDao.getById(id);
         lector.setFacultyId(facultyId);
         lector.setFirstName(firstName);
         lector.setLastName(lastName);
         lectorDao.update(lector);
     }
-    public int getLessonsForLector(LocalDateTime start, LocalDateTime end){
-      return lectorDao.getLessonsByTime(start,end);
+    public Optional<Integer> getLessonsForLector(LocalDateTime start, LocalDateTime end){
+      return Optional.of(lectorDao.getLessonsByTime(start, end));
     }
 }

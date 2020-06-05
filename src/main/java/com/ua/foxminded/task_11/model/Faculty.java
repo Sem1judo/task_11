@@ -1,16 +1,21 @@
 package com.ua.foxminded.task_11.model;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
 
 public class Faculty {
 
-    @NotNull
+
     private long facultyId;
-    @NotNull
-    @Size(min=3, max=50)
+    @NotBlank
+    @Size(min=3, max=50,
+            message="Faculty name must be between 3 and 20 characters long")
+    @Pattern(regexp="^[a-zA-Z0-9]+$",
+            message="Faculty name must be alphanumeric with no spaces")
     private String name;
     private List<Group> groups;
     private List<Lector> lectors;
