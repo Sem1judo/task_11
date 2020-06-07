@@ -1,12 +1,18 @@
 package com.ua.foxminded.task_11.services;
 
 import com.ua.foxminded.task_11.dao.impl.LessonDaoImpl;
+import com.ua.foxminded.task_11.exceptions.DaoException;
+import com.ua.foxminded.task_11.exceptions.ServicesException;
+import com.ua.foxminded.task_11.model.Group;
 import com.ua.foxminded.task_11.model.Lector;
 import com.ua.foxminded.task_11.model.Lesson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,30 +21,63 @@ public class LessonServices {
 
     @Autowired
     private LessonDaoImpl lessonDao;
+    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private Validator validator = factory.getValidator();
 
-    public Optional<List<Lesson>> getLessons() {
-        return Optional.ofNullable(lessonDao.getAll());
+    public List<Lesson> getLessons() throws ServicesException {
+        try {
+            return lessonDao.getAll();
+        } catch (DaoException e) {
+            throw new ServicesException("Failed to get lessons", e);
+        }
     }
 
-    public void createNewLesson(@Valid String nameLesson, Lector lector) {
-        Lesson lesson = new Lesson();
-        lesson.setName(nameLesson);
-        lesson.setLector(lector);
-        lessonDao.create(lesson);
+
+    public boolean createNewLesson(@Valid Lesson lesson) throws ServicesException {
+        try {
+          return lessonDao.create(lesson);
+        } catch (DaoException e) {
+            throw new ServicesException("Failed to create lesson", e);
+        }
     }
 
-    public void deleteLesson(long id) {
-        lessonDao.delete(id);
+    public boolean deleteLesson(long id) throws ServicesException {
+        try {
+          return lessonDao.delete(id);
+        } catch (DaoException e) {
+            throw new ServicesException("Failed to delete lesson by id", e);
+        }
     }
 
-    public Optional<Lesson> getLesson(long id) {
-        return Optional.ofNullable(lessonDao.getById(id));
+
+    public Lesson getLesson(long id) throws ServicesException {
+        Lesson lesson;
+        try {
+            lesson = lessonDao.getById(id);
+        } catch (DaoException e) {
+            throw new ServicesException("Failed to retrieve lesson by id", e);
+        }
+        return lesson;
     }
 
-    public void updateLesson(long id,@Valid String nameLesson, Lector lector) {
-        Lesson lesson = lessonDao.getById(id);
-        lesson.setName(nameLesson);
-        lesson.setLector(lector);
-        lessonDao.update(lesson);
+    public boolean updateLesson(@Valid Lesson lesson) throws ServicesException {
+        if (lesson.getLessonId() == 0) {
+            throw new ServicesException("Missing id");
+        }
+
+        validator.validate(lesson)
+                .forEach(violation -> System.out.println(violation.getMessage()));
+
+        try {
+            lessonDao.getById(lesson.getLessonId());
+        } catch (DaoException e) {
+            throw new ServicesException("Failed to retrieve lesson by id", e);
+        }
+
+        try {
+            return lessonDao.update(lesson);
+        } catch (DaoException e) {
+            throw new ServicesException("Problem with updating lesson");
+        }
     }
 }

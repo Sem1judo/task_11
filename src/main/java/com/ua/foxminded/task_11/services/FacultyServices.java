@@ -3,20 +3,13 @@ package com.ua.foxminded.task_11.services;
 import com.ua.foxminded.task_11.dao.impl.FacultyDaoImpl;
 import com.ua.foxminded.task_11.exceptions.DaoException;
 import com.ua.foxminded.task_11.exceptions.ServicesException;
-import com.ua.foxminded.task_11.exceptions.WrongInputDataException;
 import com.ua.foxminded.task_11.model.Faculty;
-import com.ua.foxminded.task_11.model.Group;
-import com.ua.foxminded.task_11.model.Lector;
-import com.ua.foxminded.task_11.validation.impl.FacultyValidatorImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-
 import javax.validation.*;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
 
 @Component
 public class FacultyServices {
@@ -32,23 +25,23 @@ public class FacultyServices {
         try {
             return facultyDao.getAll();
         } catch (DaoException e) {
-            throw new ServicesException("Failed to create faculty", e);
+            throw new ServicesException("Failed to get faculties", e);
         }
     }
 
-    public void createNewFaculty(Faculty faculty) {
+    public boolean createNewFaculty(@Valid Faculty faculty) {
         try {
-            facultyDao.create(faculty);
+          return facultyDao.create(faculty);
         } catch (DaoException e) {
             throw new ServicesException("Failed to create faculty", e);
         }
     }
 
-    public void deleteFaculty(long id) {
+    public boolean deleteFaculty(long id) {
         try {
-            facultyDao.delete(id);
+            return facultyDao.delete(id);
         } catch (DaoException e) {
-            throw new ServicesException("Failed to delete faculty from id", e);
+            throw new ServicesException("Failed to delete faculty by id", e);
         }
     }
 
@@ -57,7 +50,7 @@ public class FacultyServices {
         try {
             faculty = facultyDao.getById(id);
         } catch (DaoException e) {
-            throw new ServicesException("Failed to retrieve faculty from id", e);
+            throw new ServicesException("Failed to retrieve faculty by id", e);
         }
         return faculty;
     }
@@ -75,7 +68,7 @@ public class FacultyServices {
         try {
             facultyDao.getById(faculty.getFacultyId());
         } catch (DaoException e) {
-            throw new ServicesException("Failed to retrieve faculty from id", e);
+            throw new ServicesException("Failed to retrieve faculty by id", e);
         }
 
         try {

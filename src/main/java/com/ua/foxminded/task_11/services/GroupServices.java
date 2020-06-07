@@ -1,12 +1,17 @@
 package com.ua.foxminded.task_11.services;
 
 import com.ua.foxminded.task_11.dao.impl.GroupDaoImpl;
+import com.ua.foxminded.task_11.exceptions.DaoException;
+import com.ua.foxminded.task_11.exceptions.ServicesException;
 import com.ua.foxminded.task_11.model.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
 import javax.validation.Valid;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,31 +20,70 @@ public class GroupServices {
     @Autowired
     private GroupDaoImpl groupDao;
 
-    public Optional<List<Group>> getGroups() {
-        return Optional.ofNullable(groupDao.getAll());
+    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private Validator validator = factory.getValidator();
+
+    public List<Group> getGroups() throws ServicesException {
+        try {
+            return groupDao.getAll();
+        } catch (DaoException e) {
+            throw new ServicesException("Failed to get groups", e);
+        }
     }
 
-    public void createNewGroup(@Valid String nameGroup) {
-        Group group = new Group();
-        group.setName(nameGroup);
-        groupDao.create(group);
+    public boolean createNewGroup(@Valid Group group) throws ServicesException {
+        try {
+            return groupDao.create(group);
+        } catch (DaoException e) {
+            throw new ServicesException("Failed to create group", e);
+        }
     }
 
-    public void deleteGroup(long id) {
-        groupDao.delete(id);
+    public boolean deleteGroup(long id) throws ServicesException {
+        try {
+           return groupDao.delete(id);
+        } catch (DaoException e) {
+            throw new ServicesException("Failed to delete group by id", e);
+        }
     }
 
-    public Optional<Group> getGroup(long id) {
-        return Optional.ofNullable(groupDao.getById(id));
+    public Group getGroup(long id) throws ServicesException {
+        Group group;
+        try {
+            group = groupDao.getById(id);
+        } catch (DaoException e) {
+            throw new ServicesException("Failed to retrieve group by id", e);
+        }
+        return group;
     }
 
-    public void updateGroup(long id,@Valid String nameGroup) {
-        Group group = groupDao.getById(id);
-        group.setName(nameGroup);
-        groupDao.update(group);
+    public boolean updateGroup(@Valid Group group) throws ServicesException {
+        if (group.getGroupId() == 0) {
+            throw new ServicesException("Missing id");
+        }
+
+        validator.validate(group)
+                .forEach(violation -> System.out.println(violation.getMessage()));
+
+        try {
+            groupDao.getById(group.getGroupId());
+        } catch (DaoException e) {
+            throw new ServicesException("Failed to retrieve faculty from id", e);
+        }
+
+        try {
+            return groupDao.update(group);
+        } catch (DaoException e) {
+            throw new ServicesException("Problem with updating faculty");
+        }
     }
 
-    public Optional<Integer> getLessonsForGroup(Long id) {
-        return Optional.of(groupDao.getLessonsById(id));
+    public int getLessonsForGroup(Long id) throws ServicesException {
+        try {
+            return groupDao.getLessonsById(id);
+        } catch (DaoException e) {
+            throw new ServicesException("Failed to get lessons group by id", e);
+        }
+
     }
 }
