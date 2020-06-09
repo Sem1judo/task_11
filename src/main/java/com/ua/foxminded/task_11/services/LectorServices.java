@@ -3,25 +3,25 @@ package com.ua.foxminded.task_11.services;
 import com.ua.foxminded.task_11.dao.impl.LectorDaoImpl;
 import com.ua.foxminded.task_11.exceptions.DaoException;
 import com.ua.foxminded.task_11.exceptions.ServicesException;
+import com.ua.foxminded.task_11.model.Faculty;
 import com.ua.foxminded.task_11.model.Group;
 import com.ua.foxminded.task_11.model.Lector;
+import com.ua.foxminded.task_11.validation.ValidatorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import javax.validation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class LectorServices {
     @Autowired
     private LectorDaoImpl lectorDao;
-    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private Validator validator = factory.getValidator();
+   @Autowired
+   private ValidatorEntity validator;
 
     public List<Lector> getLectors() throws ServicesException {
         try {
@@ -62,8 +62,10 @@ public class LectorServices {
             throw new ServicesException("Missing id");
         }
 
-        validator.validate(lector)
-                .forEach(violation -> System.out.println(violation.getMessage()));
+        Set<ConstraintViolation<Lector>> constraintViolations = validator.getValidatorInstance().validate(lector);
+        if (!constraintViolations.isEmpty()) {
+            throw new ServicesException("Data is not valid: " + constraintViolations.iterator().next());
+        }
 
         try {
             lectorDao.getById(lector.getLectorId());

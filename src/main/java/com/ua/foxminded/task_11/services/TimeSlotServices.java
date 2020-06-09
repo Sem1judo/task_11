@@ -5,15 +5,15 @@ import com.ua.foxminded.task_11.exceptions.DaoException;
 import com.ua.foxminded.task_11.exceptions.ServicesException;
 
 import com.ua.foxminded.task_11.model.*;
+import com.ua.foxminded.task_11.validation.ValidatorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+
+import javax.validation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Component
@@ -23,8 +23,8 @@ public class TimeSlotServices {
     @Autowired
     private TimeSlotDaoImpl timeSlotDao;
 
-    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private Validator validator = factory.getValidator();
+    @Autowired
+    private ValidatorEntity validator;
 
     public List<TimeSlot> getTimeSlots() throws ServicesException {
         try {
@@ -37,7 +37,7 @@ public class TimeSlotServices {
 
     public boolean createNewTimeSlot(@Valid TimeSlot timeSlot) throws ServicesException {
         try {
-           return timeSlotDao.create(timeSlot);
+            return timeSlotDao.create(timeSlot);
         } catch (DaoException e) {
             throw new ServicesException("Failed to create time slot", e);
         }
@@ -66,8 +66,10 @@ public class TimeSlotServices {
             throw new ServicesException("Missing id");
         }
 
-        validator.validate(timeSlot)
-                .forEach(violation -> System.out.println(violation.getMessage()));
+        Set<ConstraintViolation<TimeSlot>> constraintViolations = validator.getValidatorInstance().validate(timeSlot);
+        if (!constraintViolations.isEmpty()) {
+            throw new ServicesException("Data is not valid: " + constraintViolations.iterator().next());
+        }
 
         try {
             timeSlotDao.getById(timeSlot.getTimeSlotId());

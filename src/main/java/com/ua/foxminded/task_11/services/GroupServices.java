@@ -3,25 +3,25 @@ package com.ua.foxminded.task_11.services;
 import com.ua.foxminded.task_11.dao.impl.GroupDaoImpl;
 import com.ua.foxminded.task_11.exceptions.DaoException;
 import com.ua.foxminded.task_11.exceptions.ServicesException;
+import com.ua.foxminded.task_11.model.Faculty;
 import com.ua.foxminded.task_11.model.Group;
+import com.ua.foxminded.task_11.validation.ValidatorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import javax.validation.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class GroupServices {
     @Autowired
     private GroupDaoImpl groupDao;
 
-    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private Validator validator = factory.getValidator();
+    @Autowired
+    private ValidatorEntity validator;
 
     public List<Group> getGroups() throws ServicesException {
         try {
@@ -41,7 +41,7 @@ public class GroupServices {
 
     public boolean deleteGroup(long id) throws ServicesException {
         try {
-           return groupDao.delete(id);
+            return groupDao.delete(id);
         } catch (DaoException e) {
             throw new ServicesException("Failed to delete group by id", e);
         }
@@ -62,8 +62,10 @@ public class GroupServices {
             throw new ServicesException("Missing id");
         }
 
-        validator.validate(group)
-                .forEach(violation -> System.out.println(violation.getMessage()));
+        Set<ConstraintViolation<Group>> constraintViolations = validator.getValidatorInstance().validate(group);
+        if (!constraintViolations.isEmpty()) {
+            throw new ServicesException("Data is not valid: " + constraintViolations.iterator().next());
+        }
 
         try {
             groupDao.getById(group.getGroupId());

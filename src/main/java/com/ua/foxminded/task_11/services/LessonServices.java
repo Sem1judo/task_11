@@ -3,26 +3,25 @@ package com.ua.foxminded.task_11.services;
 import com.ua.foxminded.task_11.dao.impl.LessonDaoImpl;
 import com.ua.foxminded.task_11.exceptions.DaoException;
 import com.ua.foxminded.task_11.exceptions.ServicesException;
-import com.ua.foxminded.task_11.model.Group;
-import com.ua.foxminded.task_11.model.Lector;
+
+import com.ua.foxminded.task_11.model.Faculty;
 import com.ua.foxminded.task_11.model.Lesson;
+import com.ua.foxminded.task_11.validation.ValidatorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import javax.validation.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class LessonServices {
 
     @Autowired
     private LessonDaoImpl lessonDao;
-    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private Validator validator = factory.getValidator();
+    @Autowired
+    private ValidatorEntity validator;
 
     public List<Lesson> getLessons() throws ServicesException {
         try {
@@ -65,8 +64,10 @@ public class LessonServices {
             throw new ServicesException("Missing id");
         }
 
-        validator.validate(lesson)
-                .forEach(violation -> System.out.println(violation.getMessage()));
+        Set<ConstraintViolation<Lesson>> constraintViolations = validator.getValidatorInstance().validate(lesson);
+        if (!constraintViolations.isEmpty()) {
+            throw new ServicesException("Data is not valid: " + constraintViolations.iterator().next());
+        }
 
         try {
             lessonDao.getById(lesson.getLessonId());
