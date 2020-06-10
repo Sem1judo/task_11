@@ -1,63 +1,68 @@
 package com.ua.foxminded.task_11.services;
 
 import com.ua.foxminded.task_11.dao.impl.LectorDaoImpl;
-import com.ua.foxminded.task_11.exceptions.DaoException;
 import com.ua.foxminded.task_11.exceptions.ServicesException;
-import com.ua.foxminded.task_11.model.Faculty;
-import com.ua.foxminded.task_11.model.Group;
 import com.ua.foxminded.task_11.model.Lector;
 import com.ua.foxminded.task_11.validation.ValidatorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
 
 import javax.validation.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
-@Component
+@Service
 public class LectorServices {
     @Autowired
     private LectorDaoImpl lectorDao;
-   @Autowired
-   private ValidatorEntity validator;
+    @Autowired
+    private ValidatorEntity validator;
 
-    public List<Lector> getLectors() throws ServicesException {
+    public List<Lector> getLectors()  {
         try {
             return lectorDao.getAll();
-        } catch (DaoException e) {
-            throw new ServicesException("Failed to get lectors", e);
+        } catch (DataAccessException e) {
+            throw new ServicesException("Failed to get list of lectors", e);
         }
     }
 
-    public void createNewLector(@Valid Lector lector) throws ServicesException {
+    public void createNewLector(@Valid Lector lector)  {
         try {
             lectorDao.create(lector);
-        } catch (DaoException e) {
+        } catch (DataAccessException e) {
             throw new ServicesException("Failed to create lector", e);
         }
     }
 
-    public boolean deleteLector(long id) throws ServicesException {
+    public boolean deleteLector(long id)  {
+        if (id == 0) {
+            throw new ServicesException("Missing id");
+        }
         try {
-          return lectorDao.delete(id);
-        } catch (DaoException e) {
-            throw new ServicesException("Failed to delete lector by id", e);
+            return lectorDao.delete(id);
+        } catch (DataAccessException e) {
+            throw new ServicesException("Failed to delete lector by such id", e);
         }
     }
 
-    public Lector getLector(long id) throws ServicesException {
+    public Lector getLector(long id)  {
+        if (id == 0) {
+            throw new ServicesException("Missing id");
+        }
+
         Lector lector;
         try {
             lector = lectorDao.getById(id);
-        } catch (DaoException e) {
-            throw new ServicesException("Failed to retrieve lector by id", e);
+        } catch (DataAccessException e) {
+            throw new ServicesException("Failed to retrieve lector by such id: ", e);
         }
         return lector;
     }
 
-    public boolean updateLector(@Valid Lector lector) throws ServicesException {
+    public boolean updateLector(@Valid Lector lector)  {
         if (lector.getLectorId() == 0) {
             throw new ServicesException("Missing id");
         }
@@ -69,21 +74,22 @@ public class LectorServices {
 
         try {
             lectorDao.getById(lector.getLectorId());
-        } catch (DaoException e) {
-            throw new ServicesException("Failed to retrieve lector by id", e);
+        } catch (DataAccessException e) {
+            throw new ServicesException("Failed to retrieve lector by id" + e);
         }
 
         try {
             return lectorDao.update(lector);
-        } catch (DaoException e) {
+        } catch (DataAccessException e) {
             throw new ServicesException("Problem with updating lector");
         }
     }
 
-    public int getLessonsForLector(LocalDateTime start, LocalDateTime end) throws ServicesException {
+    public int getLessonsForLector(LocalDateTime start, LocalDateTime end) {
+
         try {
             return lectorDao.getLessonsByTime(start, end);
-        } catch (DaoException e) {
+        } catch (DataAccessException e) {
             throw new ServicesException("Failed to get lessons for lector by id", e);
         }
     }

@@ -1,7 +1,9 @@
 package com.ua.foxminded.task_11.dao.impl;
 
+import com.ua.foxminded.task_11.model.Group;
 import com.ua.foxminded.task_11.model.Lector;
 import com.ua.foxminded.task_11.model.mapper.LectorMapper;
+import com.ua.foxminded.task_11.validation.ValidatorEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +13,9 @@ import org.mockito.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import org.springframework.test.util.ReflectionTestUtils;
+
+import javax.validation.ConstraintViolation;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -22,7 +27,8 @@ class LectorDaoImplTest {
     @InjectMocks
     private LectorDaoImpl lectorDao;
     @InjectMocks
-    private LectorMapper lectorMapper;
+    private ValidatorEntity validator;
+
 
     @BeforeEach
     void init() {
@@ -94,6 +100,45 @@ class LectorDaoImplTest {
         lector.setFirstName("testName");
         lector.setLastName("testSurname");
         return lector;
+    }
+    @Test
+    public void shouldOutputAppropriateSentencesWhenNameIsNull() {
+        Lector lector = new Lector(1L,null,null);
+
+        Set<ConstraintViolation<Lector>> constraintViolations =
+                validator.getValidatorInstance().validate(lector);
+
+        assertEquals(2, constraintViolations.size());
+        assertEquals(
+                "не должно быть пустым",
+                constraintViolations.iterator().next().getMessage()
+        );
+    }
+
+    @Test
+    public void shouldOutputAppropriateSentencesWhenNameOrSurnameTooShort() {
+
+        Lector lector = new Lector(1L,"V","V");
+
+        Set<ConstraintViolation<Lector>> constraintViolations =
+                validator.getValidatorInstance().validate(lector);
+
+        assertEquals(2, constraintViolations.size());
+        assertEquals(
+                "First name must be between 3 and 20 characters long",
+                constraintViolations.iterator().next().getMessage()
+        );
+    }
+
+    @Test
+    public void shouldPassWhenValid() {
+
+        Lector lector = new Lector(1L,"ValidName","ValidSurname");
+
+        Set<ConstraintViolation<Lector>> constraintViolations =
+                validator.getValidatorInstance().validate(lector);
+
+        assertEquals(0, constraintViolations.size());
     }
 }
 

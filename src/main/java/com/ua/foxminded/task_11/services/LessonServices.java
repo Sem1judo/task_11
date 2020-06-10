@@ -1,21 +1,18 @@
 package com.ua.foxminded.task_11.services;
 
 import com.ua.foxminded.task_11.dao.impl.LessonDaoImpl;
-import com.ua.foxminded.task_11.exceptions.DaoException;
 import com.ua.foxminded.task_11.exceptions.ServicesException;
-
-import com.ua.foxminded.task_11.model.Faculty;
 import com.ua.foxminded.task_11.model.Lesson;
 import com.ua.foxminded.task_11.validation.ValidatorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
 
 import javax.validation.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
-@Component
+@Service
 public class LessonServices {
 
     @Autowired
@@ -23,43 +20,49 @@ public class LessonServices {
     @Autowired
     private ValidatorEntity validator;
 
-    public List<Lesson> getLessons() throws ServicesException {
+    public List<Lesson> getLessons()  {
         try {
             return lessonDao.getAll();
-        } catch (DaoException e) {
-            throw new ServicesException("Failed to get lessons", e);
+        } catch (DataAccessException e) {
+            throw new ServicesException("Failed to get list of lessons", e);
         }
     }
 
 
-    public boolean createNewLesson(@Valid Lesson lesson) throws ServicesException {
+    public boolean createNewLesson(@Valid Lesson lesson)  {
         try {
           return lessonDao.create(lesson);
-        } catch (DaoException e) {
+        } catch (DataAccessException e) {
             throw new ServicesException("Failed to create lesson", e);
         }
     }
 
-    public boolean deleteLesson(long id) throws ServicesException {
+    public boolean deleteLesson(long id)  {
+        if (id == 0) {
+            throw new ServicesException("Missing id");
+        }
         try {
           return lessonDao.delete(id);
-        } catch (DaoException e) {
+        } catch (DataAccessException e) {
             throw new ServicesException("Failed to delete lesson by id", e);
         }
     }
 
 
-    public Lesson getLesson(long id) throws ServicesException {
+    public Lesson getLesson(long id)  {
+        if (id == 0) {
+            throw new ServicesException("Missing id");
+        }
         Lesson lesson;
         try {
             lesson = lessonDao.getById(id);
-        } catch (DaoException e) {
+        } catch (DataAccessException e) {
             throw new ServicesException("Failed to retrieve lesson by id", e);
         }
         return lesson;
     }
 
-    public boolean updateLesson(@Valid Lesson lesson) throws ServicesException {
+    public boolean updateLesson(@Valid Lesson lesson)  {
         if (lesson.getLessonId() == 0) {
             throw new ServicesException("Missing id");
         }
@@ -71,13 +74,13 @@ public class LessonServices {
 
         try {
             lessonDao.getById(lesson.getLessonId());
-        } catch (DaoException e) {
-            throw new ServicesException("Failed to retrieve lesson by id", e);
+        } catch (DataAccessException e) {
+            throw new ServicesException("Failed to retrieve lesson by such id", e);
         }
 
         try {
             return lessonDao.update(lesson);
-        } catch (DaoException e) {
+        } catch (DataAccessException e) {
             throw new ServicesException("Problem with updating lesson");
         }
     }

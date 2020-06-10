@@ -1,7 +1,9 @@
 package com.ua.foxminded.task_11.dao.impl;
 
+import com.ua.foxminded.task_11.model.Faculty;
 import com.ua.foxminded.task_11.model.Group;
 import com.ua.foxminded.task_11.model.mapper.GroupMapper;
+import com.ua.foxminded.task_11.validation.ValidatorEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -9,6 +11,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import javax.validation.ConstraintViolation;
+import java.util.ArrayList;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.eq;
@@ -20,6 +27,8 @@ class GroupDaoImplTest {
     private JdbcTemplate jdbcTemplate;
     @InjectMocks
     private GroupDaoImpl groupDao;
+    @InjectMocks
+    private ValidatorEntity validator;
 
     @BeforeEach
     void init() {
@@ -78,6 +87,43 @@ class GroupDaoImplTest {
         group.setName("testName");
 
         return group;
+    }
+    @Test
+    public void shouldOutputAppropriateSentencesWhenNameIsNull() {
+        Group group = new Group(1,1,null);
+
+        Set<ConstraintViolation<Group>> constraintViolations =
+                validator.getValidatorInstance().validate(group);
+
+        assertEquals(1, constraintViolations.size());
+        assertEquals(
+                "не должно быть пустым",
+                constraintViolations.iterator().next().getMessage()
+        );
+    }
+
+    @Test
+    public void shouldOutputAppropriateSentencesWhenNameTooShort() {
+        Group group = new Group(1,1,"F");
+
+        Set<ConstraintViolation<Group>> constraintViolations =
+                validator.getValidatorInstance().validate(group);
+
+        assertEquals(2, constraintViolations.size());
+        assertEquals(
+                "Group name must be alphanumeric with no spaces",
+                constraintViolations.iterator().next().getMessage()
+        );
+    }
+
+    @Test
+    public void shouldPassWhenValid() {
+        Group group = new Group(1,1,"Fb-12");
+
+        Set<ConstraintViolation<Group>> constraintViolations =
+                validator.getValidatorInstance().validate(group);
+
+        assertEquals(0, constraintViolations.size());
     }
 
 }
