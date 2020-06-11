@@ -39,12 +39,8 @@ public class TimeSlotServices {
     }
 
 
-    public boolean create(@Valid TimeSlot timeSlot) {
-        try {
-            validator.validate(timeSlot);
-        } catch (ServiceException e) {
-            throw new ServiceException("Don't pass validation");
-        }
+    public boolean create(TimeSlot timeSlot) {
+        validator.validate(timeSlot);
         try {
             return timeSlotDao.create(timeSlot);
         } catch (DataAccessException e) {
@@ -78,17 +74,11 @@ public class TimeSlotServices {
         return timeSlot;
     }
 
-    public boolean update(@Valid TimeSlot timeSlot) {
+    public boolean update(TimeSlot timeSlot) {
         if (timeSlot.getTimeSlotId() == 0) {
             throw new ServiceException("Missing id");
         }
-
-        try {
-            validator.validate(timeSlot);
-        } catch (ServiceException e) {
-            throw new ServiceException("Don't pass validation");
-        }
-
+        validator.validate(timeSlot);
         try {
             timeSlotDao.getById(timeSlot.getTimeSlotId());
         } catch (DataAccessException e) {

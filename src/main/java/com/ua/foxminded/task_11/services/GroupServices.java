@@ -34,12 +34,8 @@ public class GroupServices {
         }
     }
 
-    public boolean create(@Valid Group group) {
-        try {
-            validator.validate(group);
-        } catch (ServiceException e) {
-            throw new ServiceException("Don't pass validation");
-        }
+    public boolean create(Group group) {
+        validator.validate(group);
         try {
             return groupDao.create(group);
         } catch (DataAccessException e) {
@@ -73,15 +69,11 @@ public class GroupServices {
         return group;
     }
 
-    public boolean update(@Valid Group group) {
+    public boolean update(Group group) {
         if (group.getGroupId() == 0) {
             throw new ServiceException("Missing id");
         }
-        try {
-            validator.validate(group);
-        } catch (ServiceException e) {
-            throw new ServiceException("Don't pass validation");
-        }
+        validator.validate(group);
         try {
             groupDao.getById(group.getGroupId());
         } catch (DataAccessException e) {

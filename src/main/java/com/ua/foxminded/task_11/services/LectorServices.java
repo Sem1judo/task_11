@@ -33,13 +33,8 @@ public class LectorServices {
         }
     }
 
-    public void create(@Valid Lector lector) {
-
-        try {
-            validator.validate(lector);
-        } catch (ServiceException e) {
-            throw new ServiceException("Don't pass validation");
-        }
+    public void create(Lector lector) {
+        validator.validate(lector);
         try {
             lectorDao.create(lector);
         } catch (
@@ -74,17 +69,11 @@ public class LectorServices {
         return lector;
     }
 
-    public boolean update(@Valid Lector lector) {
+    public boolean update(Lector lector) {
         if (lector.getLectorId() == 0) {
             throw new ServiceException("Missing id");
         }
-
-        try {
-            validator.validate(lector);
-        } catch (ServiceException e) {
-            throw new ServiceException("Don't pass validation");
-        }
-
+        validator.validate(lector);
         try {
             lectorDao.getById(lector.getLectorId());
         } catch (DataAccessException e) {

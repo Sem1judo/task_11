@@ -34,12 +34,8 @@ public class LessonServices {
     }
 
 
-    public boolean create(@Valid Lesson lesson) {
-        try {
-            validator.validate(lesson);
-        } catch (ServiceException e) {
-            throw new ServiceException("Don't pass validation");
-        }
+    public boolean create(Lesson lesson) {
+        validator.validate(lesson);
         try {
             return lessonDao.create(lesson);
         } catch (DataAccessException e) {
@@ -74,17 +70,11 @@ public class LessonServices {
         return lesson;
     }
 
-    public boolean update(@Valid Lesson lesson) {
+    public boolean update(Lesson lesson) {
         if (lesson.getLessonId() == 0) {
             throw new ServiceException("Missing id");
         }
-
-        try {
-            validator.validate(lesson);
-        } catch (ServiceException e) {
-            throw new ServiceException("Don't pass validation");
-        }
-
+        validator.validate(lesson);
         try {
             lessonDao.getById(lesson.getLessonId());
         } catch (DataAccessException e) {

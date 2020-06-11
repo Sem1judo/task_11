@@ -4,6 +4,7 @@ import com.ua.foxminded.task_11.exceptions.ServiceException;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
@@ -16,7 +17,7 @@ public class ValidatorEntity<T> {
         return factory.getValidator();
     }
 
-    public void validate(T t) {
+    public void validate(@Valid T t) {
         Set<ConstraintViolation<T>> constraintViolations = getValidatorInstance().validate(t);
         if (!constraintViolations.isEmpty()) {
             throw new ServiceException("Data is not valid: " + constraintViolations.iterator().next());

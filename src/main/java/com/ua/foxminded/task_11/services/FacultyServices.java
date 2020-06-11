@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.*;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
@@ -36,12 +35,8 @@ public class FacultyServices {
         }
     }
 
-    public boolean create(@Valid Faculty faculty) {
-        try {
-            validator.validate(faculty);
-        } catch (ServiceException e) {
-            throw new ServiceException("Don't pass validation");
-        }
+    public boolean create(Faculty faculty) {
+        validator.validate(faculty);
         try {
             return facultyDao.create(faculty);
         } catch (DataAccessException e) {
@@ -75,15 +70,11 @@ public class FacultyServices {
         return faculty;
     }
 
-    public boolean update(@Valid Faculty faculty) {
+    public boolean update(Faculty faculty) {
         if (faculty.getFacultyId() == 0) {
             throw new ServiceException("Missing id");
         }
-        try {
-            validator.validate(faculty);
-        } catch (ServiceException e) {
-            throw new ServiceException("Don't pass validation");
-        }
+        validator.validate(faculty);
         try {
             facultyDao.getById(faculty.getFacultyId());
         } catch (DataAccessException e) {
