@@ -137,7 +137,6 @@ class TimeSlotDaoImplTest {
 
     @Test
     public void shouldPassWhenValid() {
-
         TimeSlot timeSlot = new TimeSlot(1L,LocalDateTime.of(2021,6,10,10,15),
                 LocalDateTime.of(2021,6,10,12,15),new Group(),new Lector());
 
