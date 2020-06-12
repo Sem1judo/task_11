@@ -97,43 +97,43 @@ class FacultyDaoImplTest {
         return faculty;
     }
 
-    @Test
-    public void shouldOutputExceptionWhenNameIsNull() {
-        Faculty faculty = new Faculty(1, null, new ArrayList<>(), new ArrayList<>());
-
-        Set<ConstraintViolation<Faculty>> constraintViolations =
-                validator.getValidatorInstance().validate(faculty);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals(
-                "не должно быть пустым",
-                constraintViolations.iterator().next().getMessage()
-        );
-    }
-
-    @Test
-    public void shouldOutputAppropriateSentencesWhenNameTooShort() {
-        Faculty faculty = new Faculty(1, "D", new ArrayList<>(), new ArrayList<>());
-
-        Set<ConstraintViolation<Faculty>> constraintViolations =
-                validator.getValidatorInstance().validate(faculty);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals(
-                "Faculty name must be between 3 and 20 characters",
-                constraintViolations.iterator().next().getMessage()
-        );
-    }
-
-    @Test
-    public void shouldPassWhenValid() {
-        Faculty faculty = new Faculty(1, "ValidName", new ArrayList<>(), new ArrayList<>());
-
-        Set<ConstraintViolation<Faculty>> constraintViolations =
-                validator.getValidatorInstance().validate(faculty);
-
-        assertEquals(0, constraintViolations.size());
-    }
+//    @Test
+//    public void shouldOutputExceptionWhenNameIsNull() {
+//        Faculty faculty = new Faculty(1, null, new ArrayList<>(), new ArrayList<>());
+//
+//        Set<ConstraintViolation<Faculty>> constraintViolations =
+//                validator.getValidatorInstance().validate(faculty);
+//
+//        assertEquals(1, constraintViolations.size());
+//        assertEquals(
+//                "не должно быть пустым",
+//                constraintViolations.iterator().next().getMessage()
+//        );
+//    }
+//
+//    @Test
+//    public void shouldOutputAppropriateSentencesWhenNameTooShort() {
+//        Faculty faculty = new Faculty(1, "D", new ArrayList<>(), new ArrayList<>());
+//
+//        Set<ConstraintViolation<Faculty>> constraintViolations =
+//                validator.getValidatorInstance().validate(faculty);
+//
+//        assertEquals(1, constraintViolations.size());
+//        assertEquals(
+//                "Faculty name must be between 3 and 20 characters",
+//                constraintViolations.iterator().next().getMessage()
+//        );
+//    }
+//
+//    @Test
+//    public void shouldPassWhenValid() {
+//        Faculty faculty = new Faculty(1, "ValidName", new ArrayList<>(), new ArrayList<>());
+//
+//        Set<ConstraintViolation<Faculty>> constraintViolations =
+//                validator.getValidatorInstance().validate(faculty);
+//
+//        assertEquals(0, constraintViolations.size());
+//    }
 }
 
 

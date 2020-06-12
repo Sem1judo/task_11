@@ -1,6 +1,5 @@
 package com.ua.foxminded.task_11.services;
 
-import com.sun.tools.internal.ws.wsdl.framework.NoSuchEntityException;
 import com.ua.foxminded.task_11.dao.impl.TimeSlotDaoImpl;
 import com.ua.foxminded.task_11.exceptions.ServiceException;
 
@@ -12,10 +11,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import javax.validation.*;
-
+import javax.ejb.NoSuchEntityException;
 import java.util.List;
-import java.util.Set;
+
 
 
 @Service
@@ -37,7 +35,6 @@ public class TimeSlotServices {
             throw new ServiceException("Failed to get time slots", e);
         }
     }
-
 
     public boolean create(TimeSlot timeSlot) {
         validator.validate(timeSlot);

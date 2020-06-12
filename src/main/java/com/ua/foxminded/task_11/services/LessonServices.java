@@ -1,9 +1,8 @@
 package com.ua.foxminded.task_11.services;
 
-import com.sun.tools.internal.ws.wsdl.framework.NoSuchEntityException;
+
 import com.ua.foxminded.task_11.dao.impl.LessonDaoImpl;
 import com.ua.foxminded.task_11.exceptions.ServiceException;
-import com.ua.foxminded.task_11.model.Group;
 import com.ua.foxminded.task_11.model.Lesson;
 import com.ua.foxminded.task_11.validation.ValidatorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +10,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import javax.validation.*;
+import javax.ejb.NoSuchEntityException;
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 public class LessonServices {
