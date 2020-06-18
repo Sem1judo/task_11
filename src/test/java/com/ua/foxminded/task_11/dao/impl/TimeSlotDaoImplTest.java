@@ -104,47 +104,6 @@ class TimeSlotDaoImplTest {
 
         return timeSlot;
     }
-//    @Test
-//    public void shouldOutputAppropriateSentencesWhenDateIsNull() {
-//        TimeSlot timeSlot = new TimeSlot(1L,null,
-//               null,new Group(),new Lector());
-//
-//        Set<ConstraintViolation<TimeSlot>> constraintViolations =
-//                validator.getValidatorInstance().validate(timeSlot);
-//
-//
-//        assertEquals(2, constraintViolations.size());
-//        assertEquals(
-//                "не должно равняться null",
-//                constraintViolations.iterator().next().getMessage()
-//        );
-//    }
-//
-//    @Test
-//    public void shouldOutputAppropriateSentencesWhenDateIsPassed() {
-//        TimeSlot timeSlot = new TimeSlot(1L,LocalDateTime.of(2019,6,10,10,15),
-//                LocalDateTime.of(2019,6,10,12,15),new Group(),new Lector());
-//
-//        Set<ConstraintViolation<TimeSlot>> constraintViolations =
-//                validator.getValidatorInstance().validate(timeSlot);
-//
-//        assertEquals(2, constraintViolations.size());
-//        assertEquals(
-//                "должно содержать дату, которая еще не наступила",
-//                constraintViolations.iterator().next().getMessage()
-//        );
-//    }
-//
-//    @Test
-//    public void shouldPassWhenValid() {
-//        TimeSlot timeSlot = new TimeSlot(1L,LocalDateTime.of(2021,6,10,10,15),
-//                LocalDateTime.of(2021,6,10,12,15),new Group(),new Lector());
-//
-//        Set<ConstraintViolation<TimeSlot>> constraintViolations =
-//                validator.getValidatorInstance().validate(timeSlot);
-//
-//        assertEquals(0, constraintViolations.size());
-//    }
 
 }
 

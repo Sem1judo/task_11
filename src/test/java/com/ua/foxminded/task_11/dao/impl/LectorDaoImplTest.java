@@ -101,44 +101,6 @@ class LectorDaoImplTest {
         lector.setLastName("testSurname");
         return lector;
     }
-//    @Test
-//    public void shouldOutputAppropriateSentencesWhenNameIsNull() {
-//        Lector lector = new Lector(1L,null,null);
-//
-//        Set<ConstraintViolation<Lector>> constraintViolations =
-//                validator.getValidatorInstance().validate(lector);
-//
-//        assertEquals(2, constraintViolations.size());
-//        assertEquals(
-//                "не должно быть пустым",
-//                constraintViolations.iterator().next().getMessage()
-//        );
-//    }
-//
-//    @Test
-//    public void shouldOutputAppropriateSentencesWhenNameOrSurnameTooShort() {
-//
-//        Lector lector = new Lector(1L,"V","V");
-//
-//        Set<ConstraintViolation<Lector>> constraintViolations =
-//                validator.getValidatorInstance().validate(lector);
-//
-//        assertEquals(2, constraintViolations.size());
-//        assertEquals(
-//                "First name must be between 3 and 20 characters long",
-//                constraintViolations.iterator().next().getMessage()
-//        );
-//    }
-//
-//    @Test
-//    public void shouldPassWhenValid() {
-//
-//        Lector lector = new Lector(1L,"ValidName","ValidSurname");
-//
-//        Set<ConstraintViolation<Lector>> constraintViolations =
-//                validator.getValidatorInstance().validate(lector);
-//
-//        assertEquals(0, constraintViolations.size());
-//    }
+
 }
 

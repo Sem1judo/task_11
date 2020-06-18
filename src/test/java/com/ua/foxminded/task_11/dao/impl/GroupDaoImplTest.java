@@ -27,8 +27,6 @@ class GroupDaoImplTest {
     private JdbcTemplate jdbcTemplate;
     @InjectMocks
     private GroupDaoImpl groupDao;
-    @InjectMocks
-    private ValidatorEntity validator;
 
     @BeforeEach
     void init() {
@@ -88,43 +86,5 @@ class GroupDaoImplTest {
 
         return group;
     }
-//    @Test
-//    public void shouldOutputAppropriateSentencesWhenNameIsNull() {
-//        Group group = new Group(1,1,null);
-//
-//        Set<ConstraintViolation<Group>> constraintViolations =
-//                validator.getValidatorInstance().validate(group);
-//
-//        assertEquals(1, constraintViolations.size());
-//        assertEquals(
-//                "не должно быть пустым",
-//                constraintViolations.iterator().next().getMessage()
-//        );
-//    }
-//
-//    @Test
-//    public void shouldOutputAppropriateSentencesWhenNameTooShort() {
-//        Group group = new Group(1,1,"F");
-//
-//        Set<ConstraintViolation<Group>> constraintViolations =
-//                validator.getValidatorInstance().validate(group);
-//
-//        assertEquals(2, constraintViolations.size());
-//        assertEquals(
-//                "Group name must be alphanumeric with no spaces",
-//                constraintViolations.iterator().next().getMessage()
-//        );
-//    }
-//
-//    @Test
-//    public void shouldPassWhenValid() {
-//        Group group = new Group(1,1,"Fb-12");
-//
-//        Set<ConstraintViolation<Group>> constraintViolations =
-//                validator.getValidatorInstance().validate(group);
-//
-//        assertEquals(0, constraintViolations.size());
-//    }
-
 }
 

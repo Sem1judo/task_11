@@ -31,10 +31,10 @@ public class LectorServices {
         }
     }
 
-    public void create(Lector lector) {
+    public boolean create(Lector lector) {
         validator.validate(lector);
         try {
-            lectorDao.create(lector);
+            return lectorDao.create(lector);
         } catch (
                 DataAccessException e) {
             throw new ServiceException("Failed to create lector", e);
