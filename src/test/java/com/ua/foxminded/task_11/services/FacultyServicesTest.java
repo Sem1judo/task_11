@@ -71,9 +71,7 @@ class FacultyServicesTest {
 
         when(facultyDao.create(eq(faculty))).thenReturn(Boolean.TRUE);
 
-        System.out.println(faculty);
         boolean isCreated = facultyServices.create(faculty);
-        System.out.println(faculty);
 
         verify(facultyDao, times(1)).create(faculty);
         assertTrue(isCreated);
@@ -81,7 +79,11 @@ class FacultyServicesTest {
 
     @Test
     public void shouldDeleteFaculty() {
-        facultyServices.delete(1L);
+
+        when(facultyDao.delete(eq(1L))).thenReturn(Boolean.TRUE);
+        boolean isDeleted = facultyServices.delete(1L);
+
+        assertTrue(isDeleted);
         verify(facultyDao, times(1)).delete(1L);
     }
 
@@ -98,25 +100,36 @@ class FacultyServicesTest {
     }
 
     @Test
-    public void shouldOutputExceptionWhenNameIsNull() {
+    public void shouldThrowServiceExceptionWhenNameIsNull() {
         Faculty faculty = new Faculty(1, null, new ArrayList<>(), new ArrayList<>());
-
-        assertThrows(ServiceException.class, () -> validator.validate(faculty));
+        assertThrows(ServiceException.class, () -> facultyServices.create(faculty));
     }
 
     @Test
-    public void shouldOutputAppropriateSentencesWhenNameTooShort() {
+    public void shouldThrowServiceExceptionWhenNameTooShort() {
         Faculty faculty = new Faculty(1, "D", new ArrayList<>(), new ArrayList<>());
-
-        assertThrows(ServiceException.class, () -> validator.validate(faculty));
+        assertThrows(ServiceException.class, () -> facultyServices.create(faculty));
     }
 
     @Test
-    public void shouldPassWhenValid() {
-        Faculty faculty = new Faculty(1, "Biology", new ArrayList<>(), new ArrayList<>());
-
-        assertDoesNotThrow(() -> validator.validate(faculty));
-        assertEquals("Biology", faculty.getName());
+    public void shouldThrowServiceExceptionWhenIdZero() {
+        Faculty faculty = new Faculty(0, "Normal", new ArrayList<>(), new ArrayList<>());
+        assertThrows(ServiceException.class, () -> facultyServices.update(faculty));
     }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenNameHaveForbiddenSymbol() {
+        Faculty faculty = new Faculty(1, "Nam_e"
+                , new ArrayList<>(), new ArrayList<>());
+        assertThrows(ServiceException.class, () -> facultyServices.update(faculty));
+    }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenNameIsTooLong() {
+        Faculty faculty = new Faculty(1, "verybignamewhichcantbethereaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                , new ArrayList<>(), new ArrayList<>());
+        assertThrows(ServiceException.class, () -> facultyServices.update(faculty));
+    }
+
 }
 

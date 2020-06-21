@@ -78,6 +78,8 @@ public class TimeSlotServices {
         validator.validate(timeSlot);
         try {
             timeSlotDao.getById(timeSlot.getTimeSlotId());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NoSuchEntityException("Doesn't exist such time slot");
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to retrieve lesson by such id:", e);
         }

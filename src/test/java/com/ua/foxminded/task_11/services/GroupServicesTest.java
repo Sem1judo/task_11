@@ -78,7 +78,11 @@ class GroupServicesTest {
 
     @Test
     public void shouldDeleteGroup() {
-        groupServices.delete(1L);
+        when(groupDao.delete(eq(1L))).thenReturn(Boolean.TRUE);
+
+        boolean isDeleted = groupServices.delete(1L);
+
+        assertTrue(isDeleted);
         verify(groupDao, times(1)).delete(1L);
     }
 
@@ -95,26 +99,33 @@ class GroupServicesTest {
     }
 
     @Test
-    public void shouldOutputAppropriateSentencesWhenNameIsNull() {
+    public void shouldThrowServiceExceptionWhenNameIsNull() {
         Group group = new Group(1, 1, null);
-
-        assertThrows(ServiceException.class, () -> validator.validate(group));
+        assertThrows(ServiceException.class, () -> groupServices.create(group));
     }
 
     @Test
-    public void shouldOutputAppropriateSentencesWhenNameTooShort() {
-        Group group = new Group(1, 1, "F");
-
-        assertThrows(ServiceException.class, () -> validator.validate(group));
-
+    public void shouldThrowServiceExceptionWhenNameTooShort() {
+        Group group = new Group(1, 1, "Fb");
+        assertThrows(ServiceException.class, () -> groupServices.create(group));
     }
 
     @Test
-    public void shouldPassWhenValid() {
-        Group group = new Group(1, 1, "Fb-12");
+    public void shouldThrowServiceExceptionWhenIdZero() {
+        Group group = new Group(0, 1, "Fb-12");
+        assertThrows(ServiceException.class, () -> groupServices.update(group));
+    }
 
-        assertDoesNotThrow(() -> validator.validate(group));
-        assertEquals("Fb-12", group.getName());
+    @Test
+    public void shouldThrowServiceExceptionWhenNameHaveForbiddenSymbol() {
+        Group group = new Group(1, 1, "Fb_12");
+        assertThrows(ServiceException.class, () -> groupServices.create(group));
+    }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenNameIsTooLong() {
+        Group group = new Group(1, 1, "aaaaaaaaaaFbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        assertThrows(ServiceException.class, () -> groupServices.create(group));
     }
 
 }

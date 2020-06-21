@@ -2,6 +2,7 @@ package com.ua.foxminded.task_11.services;
 
 import com.ua.foxminded.task_11.dao.impl.TimeSlotDaoImpl;
 import com.ua.foxminded.task_11.exceptions.ServiceException;
+
 import com.ua.foxminded.task_11.model.Group;
 import com.ua.foxminded.task_11.model.Lector;
 import com.ua.foxminded.task_11.model.TimeSlot;
@@ -89,7 +90,11 @@ class TimeSlotServicesTest {
 
     @Test
     public void shouldDeleteTimeSlot() {
-        timeSlotServices.delete(1L);
+        when(timeSlotDao.delete(1L)).thenReturn(Boolean.TRUE);
+
+        boolean isDeleted = timeSlotServices.delete(1L);
+
+        assertTrue(isDeleted);
         verify(timeSlotDao, times(1)).delete(1L);
     }
 
@@ -106,23 +111,7 @@ class TimeSlotServicesTest {
     }
 
     @Test
-    public void shouldOutputAppropriateSentencesWhenDateIsNull() {
-        TimeSlot timeSlot = new TimeSlot(1L, null,
-                null, new Group(), new Lector());
-
-        assertThrows(ServiceException.class, () -> validator.validate(timeSlot));
-    }
-
-    @Test
-    public void shouldOutputAppropriateSentencesWhenDateIsPassed() {
-        TimeSlot timeSlot = new TimeSlot(1L, LocalDateTime.of(2019, 6, 10, 10, 15),
-                LocalDateTime.of(2019, 6, 10, 12, 15), new Group(), new Lector());
-
-        assertThrows(ServiceException.class, () -> validator.validate(timeSlot));
-    }
-
-    @Test
-    public void shouldPassWhenValid() {
+    public void shouldPassWhenFacultyDateValid() {
         TimeSlot timeSlot = new TimeSlot(1L, LocalDateTime.of(2021, 6, 10, 10, 15),
                 LocalDateTime.of(2021, 6, 10, 12, 15), new Group(), new Lector());
 
@@ -131,5 +120,45 @@ class TimeSlotServicesTest {
         assertEquals("2021-06-10T12:15", timeSlot.getEndLesson().toString());
     }
 
+
+    @Test
+    public void shouldThrowServiceExceptionWhenStartDateIsNull() {
+        TimeSlot timeSlot = new TimeSlot(1L, null,
+                LocalDateTime.of(2021, 6, 10, 12, 15), new Group(), new Lector());
+
+        assertThrows(ServiceException.class, () -> timeSlotServices.create(timeSlot));
+    }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenEndDateIsNull() {
+        TimeSlot timeSlot = new TimeSlot(1L, LocalDateTime.of(2021, 6, 10, 12, 15),
+                null, new Group(), new Lector());
+
+        assertThrows(ServiceException.class, () -> timeSlotServices.create(timeSlot));
+    }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenStartDatePass() {
+        TimeSlot timeSlot = new TimeSlot(1L, LocalDateTime.of(2019, 6, 10, 10, 15),
+                LocalDateTime.of(2029, 6, 10, 12, 15), new Group(), new Lector());
+
+        assertThrows(ServiceException.class, () -> timeSlotServices.create(timeSlot));
+    }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenEndDatePass() {
+        TimeSlot timeSlot = new TimeSlot(1L, LocalDateTime.of(2021, 6, 10, 10, 15),
+                LocalDateTime.of(2015, 6, 10, 12, 15), new Group(), new Lector());
+
+        assertThrows(ServiceException.class, () -> timeSlotServices.create(timeSlot));
+    }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenIdZero() {
+        TimeSlot timeSlot = new TimeSlot(0L, LocalDateTime.of(2021, 6, 10, 10, 15),
+                LocalDateTime.of(2015, 6, 10, 12, 15), new Group(), new Lector());
+
+        assertThrows(ServiceException.class, () -> timeSlotServices.update(timeSlot));
+    }
 }
 

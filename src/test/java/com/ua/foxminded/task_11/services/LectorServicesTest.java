@@ -79,7 +79,12 @@ class LectorServicesTest {
 
     @Test
     public void shouldDeleteLector() {
-        lectorServices.delete(1L);
+
+        when(lectorDao.delete(eq(1L))).thenReturn(Boolean.TRUE);
+
+        boolean isDeleted = lectorServices.delete(1L);
+
+        assertTrue(isDeleted);
         verify(lectorDao, times(1)).delete(1L);
     }
 
@@ -87,33 +92,68 @@ class LectorServicesTest {
     public void shouldUpdateLector() {
         Lector lector = (new Lector(1L, 1L, "Andrey", "Borisov"));
         when(lectorDao.update(eq(lector))).thenReturn(Boolean.TRUE);
-       boolean isUpdated =  lectorServices.update(lector);
+
+        boolean isUpdated = lectorServices.update(lector);
 
         verify(lectorDao, times(1)).update(lector);
         assertTrue(isUpdated);
     }
 
     @Test
-    public void shouldOutputAppropriateSentencesWhenNameIsNull() {
-        Lector lector = new Lector(1L, null, null);
+    public void shouldThrowServiceExceptionWhenNameNull() {
+        Lector lector = new Lector(1L, null, "Barabas");
 
-        assertThrows(ServiceException.class, () -> validator.validate(lector));
+        assertThrows(ServiceException.class, () -> lectorServices.create(lector));
     }
 
     @Test
-    public void shouldOutputAppropriateSentencesWhenNameOrSurnameTooShort() {
-        Lector lector = new Lector(1L, "V", "V");
+    public void shouldThrowServiceExceptionWhenSurnameNull() {
+        Lector lector = new Lector(1L, "Ivan", null);
 
-        assertThrows(ServiceException.class, () -> validator.validate(lector));
+        assertThrows(ServiceException.class, () -> lectorServices.create(lector));
     }
 
     @Test
-    public void shouldPassWhenValid() {
+    public void shouldThrowServiceExceptionWhenNameTooShort() {
+        Lector lector = new Lector(1L, "V", "Vasiko");
 
-        Lector lector = new Lector(1L, "ValidName", "ValidSurname");
+        assertThrows(ServiceException.class, () -> lectorServices.create(lector));
+    }
 
-        assertDoesNotThrow(() -> validator.validate(lector));
-        assertEquals("ValidName", lector.getFirstName());
-        assertEquals("ValidSurname", lector.getLastName());
+    @Test
+    public void shouldThrowServiceExceptionWhenSurnameTooShort() {
+        Lector lector = new Lector(1L, "Saas", "V");
+
+        assertThrows(ServiceException.class, () -> lectorServices.create(lector));
+    }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenIdZero() {
+        Lector lector = new Lector(0L, "Saass", "Vaaas");
+        assertThrows(ServiceException.class, () -> lectorServices.update(lector));
+    }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenNameHaveForbiddenSymbol() {
+        Lector lector = new Lector(0L, "Saass_", "Vaaas");
+        assertThrows(ServiceException.class, () -> lectorServices.update(lector));
+    }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenSurnameNameHaveForbiddenSymbol() {
+        Lector lector = new Lector(0L, "Saass", "Vaa*as");
+        assertThrows(ServiceException.class, () -> lectorServices.update(lector));
+    }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenNameIsTooLong() {
+        Lector lector = new Lector(0L, "Saasssssssssssssssssssssssssssssssssssssssssssssss", "Vaaass");
+        assertThrows(ServiceException.class, () -> lectorServices.update(lector));
+    }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenSurnameIsTooLong() {
+        Lector lector = new Lector(0L, "Saass", "Vaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaas");
+        assertThrows(ServiceException.class, () -> lectorServices.update(lector));
     }
 }

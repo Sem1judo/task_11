@@ -79,8 +79,12 @@ class LessonServicesTest {
 
     @Test
     public void shouldDeleteLesson() {
-        lessonServices.delete(1L);
+
+        when(lessonDao.delete(1L)).thenReturn(Boolean.TRUE);
+        boolean isDeleted = lessonServices.delete(1L);
+
         verify(lessonDao, times(1)).delete(1L);
+        assertTrue(isDeleted);
     }
 
     @Test
@@ -94,26 +98,34 @@ class LessonServicesTest {
     }
 
     @Test
-    public void shouldOutputAppropriateSentencesWhenNameIsNull() {
+    public void shouldThrowServiceExceptionWhenNameIsNull() {
         Lesson lesson = new Lesson(1L, null, new Lector());
-
-        assertThrows(ServiceException.class, () -> validator.validate(lesson));
+        assertThrows(ServiceException.class, () -> lessonServices.create(lesson));
     }
 
     @Test
-    public void shouldOutputAppropriateSentencesWhenNameOrSurnameTooShort() {
+    public void shouldThrowServiceExceptionWhenNameTooShort() {
         Lesson lesson = new Lesson(1L, "V", new Lector());
-
-        assertThrows(ServiceException.class, () -> validator.validate(lesson));
+        assertThrows(ServiceException.class, () -> lessonServices.create(lesson));
     }
 
     @Test
-    public void shouldPassWhenValid() {
-
-        Lesson lesson = new Lesson(1L, "ValidName", new Lector());
-
-        assertDoesNotThrow(() -> validator.validate(lesson));
-        assertEquals("ValidName",lesson.getName());
+    public void shouldThrowServiceExceptionWhenIdZero() {
+        Lesson lesson = new Lesson(0, "Vansss", new Lector());
+        assertThrows(ServiceException.class, () -> lessonServices.update(lesson));
     }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenNameHaveForbiddenSymbol() {
+        Lesson lesson = new Lesson(0L, "Va!nss^s", new Lector());
+        assertThrows(ServiceException.class, () -> lessonServices.create(lesson));
+    }
+
+    @Test
+    public void shouldThrowServiceExceptionWhenNameIsTooLong() {
+        Lesson lesson = new Lesson(0L, "Vaaaaaaaaaaansssssssssssssssssssssssssssssssssssssssssss", new Lector());
+        assertThrows(ServiceException.class, () -> lessonServices.create(lesson));
+    }
+
 
 }

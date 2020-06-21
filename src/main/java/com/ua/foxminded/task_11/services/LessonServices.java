@@ -76,6 +76,8 @@ public class LessonServices {
         validator.validate(lesson);
         try {
             lessonDao.getById(lesson.getLessonId());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NoSuchEntityException("Doesn't exist such lesson");
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to retrieve lesson by such id", e);
         }

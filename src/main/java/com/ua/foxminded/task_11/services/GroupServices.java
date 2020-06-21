@@ -72,6 +72,8 @@ public class GroupServices {
         validator.validate(group);
         try {
             groupDao.getById(group.getGroupId());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NoSuchEntityException("Doesn't exist such group");
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to retrieve faculty from such id: ", e);
         }

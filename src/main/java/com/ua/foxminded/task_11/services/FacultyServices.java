@@ -76,6 +76,8 @@ public class FacultyServices {
         validator.validate(faculty);
         try {
             facultyDao.getById(faculty.getFacultyId());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NoSuchEntityException("Doesn't exist such faculty");
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to retrieve faculty with such id: ", e);
         }

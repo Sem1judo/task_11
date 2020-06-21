@@ -74,6 +74,8 @@ public class LectorServices {
         validator.validate(lector);
         try {
             lectorDao.getById(lector.getLectorId());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NoSuchEntityException("Doesn't exist such lector");
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to retrieve lector by id" + e);
         }
