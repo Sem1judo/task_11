@@ -38,16 +38,16 @@ class LessonServicesTest {
 
     @Test
     public void shouldGetAllLessons() {
-        List<Lesson> list = new ArrayList<>();
-        Lesson lOne = new Lesson(1, "technology", new Lector());
-        Lesson lTwo = new Lesson(1, "technology", new Lector());
-        Lesson lThree = new Lesson(1, "technology", new Lector());
+        List<Lesson> initialLessons = new ArrayList<>();
+        Lesson testLesson1 = new Lesson(1, "technology", new Lector());
+        Lesson testLesson2 = new Lesson(1, "technology", new Lector());
+        Lesson testLesson3 = new Lesson(1, "technology", new Lector());
 
-        list.add(lOne);
-        list.add(lTwo);
-        list.add(lThree);
+        initialLessons.add(testLesson1);
+        initialLessons.add(testLesson2);
+        initialLessons.add(testLesson3);
 
-        when(lessonDao.getAll()).thenReturn(list);
+        when(lessonDao.getAll()).thenReturn(initialLessons);
 
         List<Lesson> lessons = lessonServices.getAll();
 

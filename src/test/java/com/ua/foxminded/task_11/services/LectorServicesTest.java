@@ -37,16 +37,16 @@ class LectorServicesTest {
 
     @Test
     public void shouldGetAllLectors() {
-        List<Lector> list = new ArrayList<>();
-        Lector lOne = new Lector(1L, 1L, "Andrey", "Borisov");
-        Lector lTwo = new Lector(2L, 2L, "Boris", "Andeyes");
-        Lector lThree = new Lector(2L, 2L, "Andress", "Larensov");
+        List<Lector> initialLectors = new ArrayList<>();
+        Lector testLector1 = new Lector(1L, 1L, "Andrey", "Borisov");
+        Lector testLector2 = new Lector(2L, 2L, "Boris", "Andeyes");
+        Lector testLector3 = new Lector(2L, 2L, "Andress", "Larensov");
 
-        list.add(lOne);
-        list.add(lTwo);
-        list.add(lThree);
+        initialLectors.add(testLector1);
+        initialLectors.add(testLector2);
+        initialLectors.add(testLector3);
 
-        when(lectorDao.getAll()).thenReturn(list);
+        when(lectorDao.getAll()).thenReturn(initialLectors);
 
         List<Lector> lectors = lectorServices.getAll();
 
@@ -157,3 +157,4 @@ class LectorServicesTest {
         assertThrows(ServiceException.class, () -> lectorServices.update(lector));
     }
 }
+

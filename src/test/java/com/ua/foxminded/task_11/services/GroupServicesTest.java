@@ -37,16 +37,16 @@ class GroupServicesTest {
 
     @Test
     public void shouldGetAllGroups() {
-        List<Group> list = new ArrayList<>();
-        Group gOne = new Group(1, 1, "Fb-12");
-        Group gTwo = new Group(2, 2, "IT-22");
-        Group gThree = new Group(3, 3, "N1-11");
+        List<Group> initialGroups = new ArrayList<>();
+        Group testGroup1 = new Group(1, 1, "Fb-12");
+        Group testGroup2 = new Group(2, 2, "IT-22");
+        Group testGroup3 = new Group(3, 3, "NA-11");
 
-        list.add(gOne);
-        list.add(gTwo);
-        list.add(gThree);
+        initialGroups.add(testGroup1);
+        initialGroups.add(testGroup2);
+        initialGroups.add(testGroup3);
 
-        when(groupDao.getAll()).thenReturn(list);
+        when(groupDao.getAll()).thenReturn(initialGroups);
 
         List<Group> groups = groupServices.getAll();
 

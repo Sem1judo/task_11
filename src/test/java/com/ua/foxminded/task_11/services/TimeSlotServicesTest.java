@@ -48,17 +48,16 @@ class TimeSlotServicesTest {
     @Test
     public void shouldGetAllTimeSlots() {
 
-        List<TimeSlot> list = new ArrayList<>();
-        TimeSlot tOne = new TimeSlot(1, start, end, new Group(), new Lector());
-        TimeSlot tTwo = new TimeSlot(1, start, end, new Group(), new Lector());
+        List<TimeSlot> initialTimeSlots = new ArrayList<>();
+        TimeSlot testTimeSLot1 = new TimeSlot(1, start, end, new Group(), new Lector());
+        TimeSlot testTimeSLot2 = new TimeSlot(1, start, end, new Group(), new Lector());
+        TimeSlot testTimeSLot3 = new TimeSlot(1, start, end, new Group(), new Lector());
 
-        TimeSlot tThree = new TimeSlot(1, start, end, new Group(), new Lector());
+        initialTimeSlots.add(testTimeSLot1);
+        initialTimeSlots.add(testTimeSLot2);
+        initialTimeSlots.add(testTimeSLot3);
 
-        list.add(tOne);
-        list.add(tTwo);
-        list.add(tThree);
-
-        when(timeSlotDao.getAll()).thenReturn(list);
+        when(timeSlotDao.getAll()).thenReturn(initialTimeSlots);
 
         List<TimeSlot> timeSlots = timeSlotServices.getAll();
 
@@ -138,7 +137,7 @@ class TimeSlotServicesTest {
     }
 
     @Test
-    public void shouldThrowServiceExceptionWhenStartDatePass() {
+    public void shouldThrowServiceExceptionWhenStartDateIsAlreadyPass() {
         TimeSlot timeSlot = new TimeSlot(1L, LocalDateTime.of(2019, 6, 10, 10, 15),
                 LocalDateTime.of(2029, 6, 10, 12, 15), new Group(), new Lector());
 
@@ -146,7 +145,7 @@ class TimeSlotServicesTest {
     }
 
     @Test
-    public void shouldThrowServiceExceptionWhenEndDatePass() {
+    public void shouldThrowServiceExceptionWhenEndDateIsAlreadyPass() {
         TimeSlot timeSlot = new TimeSlot(1L, LocalDateTime.of(2021, 6, 10, 10, 15),
                 LocalDateTime.of(2015, 6, 10, 12, 15), new Group(), new Lector());
 

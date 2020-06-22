@@ -38,16 +38,16 @@ class FacultyServicesTest {
 
     @Test
     public void shouldGetAllFaculties() {
-        List<Faculty> list = new ArrayList<>();
-        Faculty fOne = new Faculty(1, "Biology", new ArrayList<>(), new ArrayList<>());
-        Faculty fTwo = new Faculty(2, "Math", new ArrayList<>(), new ArrayList<>());
-        Faculty fThree = new Faculty(3, "Technology", new ArrayList<>(), new ArrayList<>());
+        List<Faculty> initialFaculties = new ArrayList<>();
+        Faculty testFaculty1 = new Faculty(1, "Biology", new ArrayList<>(), new ArrayList<>());
+        Faculty testFaculty2 = new Faculty(2, "Math", new ArrayList<>(), new ArrayList<>());
+        Faculty testFaculty3 = new Faculty(3, "Technology", new ArrayList<>(), new ArrayList<>());
 
-        list.add(fOne);
-        list.add(fTwo);
-        list.add(fThree);
+        initialFaculties.add(testFaculty1);
+        initialFaculties.add(testFaculty2);
+        initialFaculties.add(testFaculty3);
 
-        when(facultyDao.getAll()).thenReturn(list);
+        when(facultyDao.getAll()).thenReturn(initialFaculties);
 
         List<Faculty> faculties = facultyServices.getAll();
 
