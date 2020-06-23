@@ -23,10 +23,11 @@ public class LessonServices {
     private LessonDaoImpl lessonDao;
     @Autowired
     private ValidatorEntity<Lesson> validator;
-    @Autowired
+
     private static final Logger logger = LoggerFactory.getLogger(LessonServices.class);
 
     private static final String MISSING_ID = "Missing id lesson.";
+    private static final String NOT_EXIST_ENTITY = "Doesn't exist such lesson";
 
     public List<Lesson> getAll() {
         logger.debug("Trying to get all lessons");
@@ -66,8 +67,8 @@ public class LessonServices {
         try {
             return lessonDao.delete(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing lesson with id={}", id);
-            throw new NoSuchEntityException("Doesn't exist such lesson");
+            logger.warn("Not existing lesson with id={}", id);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("Failed to delete lesson with id={}", id, e);
             throw new ServiceException("Failed to delete lesson by id", e);
@@ -86,8 +87,8 @@ public class LessonServices {
         try {
             lesson = lessonDao.getById(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing lesson with id={}", id);
-            throw new NoSuchEntityException("Doesn't exist such lesson");
+            logger.warn("Not existing lesson with id={}", id);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("failed to retrieve lesson with id={}", id, e);
             throw new ServiceException("Failed to retrieve lesson by id", e);
@@ -106,8 +107,8 @@ public class LessonServices {
         try {
             lessonDao.getById(lesson.getLessonId());
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing lesson: {}", lesson);
-            throw new NoSuchEntityException("Doesn't exist such lesson");
+            logger.warn("Not existing lesson: {}", lesson);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("failed to retrieve lesson: {}", lesson, e);
             throw new ServiceException("Failed to retrieve lesson by id", e);

@@ -22,10 +22,11 @@ public class LectorServices {
     private LectorDaoImpl lectorDao;
     @Autowired
     private ValidatorEntity<Lector> validator;
-    @Autowired
+
     private static final Logger logger = LoggerFactory.getLogger(LectorServices.class);
 
     private static final String MISSING_ID = "Missing id lector.";
+    private static final String NOT_EXIST_ENTITY = "Doesn't exist such lector";
 
     public List<Lector> getAll() {
         logger.debug("Trying to get all lectors");
@@ -64,8 +65,8 @@ public class LectorServices {
         try {
             return lectorDao.delete(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing lector with id={}", id);
-            throw new NoSuchEntityException("Doesn't exist such lector");
+            logger.warn("Not existing lector with id={}", id);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("failed to delete lector with id={}", id, e);
             throw new ServiceException("Failed to delete lector by such id", e);
@@ -84,8 +85,8 @@ public class LectorServices {
         try {
             lector = lectorDao.getById(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing lector with id={}", id);
-            throw new NoSuchEntityException("Doesn't exist such lector");
+            logger.warn("Not existing lector with id={}", id);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("failed to retrieve lector with id={}", id, e);
             throw new ServiceException("Failed to retrieve lector by such id: ", e);
@@ -104,8 +105,8 @@ public class LectorServices {
         try {
             lectorDao.getById(lector.getLectorId());
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing lector: {}", lector);
-            throw new NoSuchEntityException("Doesn't exist such lector");
+            logger.warn("Not existing lector: {}", lector);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("Failed to retrieve lector: {}", lector, e);
             throw new ServiceException("Failed to retrieve lector by id" + e);
@@ -125,7 +126,7 @@ public class LectorServices {
         try {
             return lectorDao.getLessonsByTime(start, end);
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing lessons with such: start time={} and end time={}", start, end);
+            logger.warn("Not existing lessons with such: start time={} and end time={}", start, end);
             throw new NoSuchEntityException("Doesn't exist such lessons for lector");
         } catch (DataAccessException e) {
             logger.error("Failed to get lessons for lector with start time={} and end time={}", start, end, e);

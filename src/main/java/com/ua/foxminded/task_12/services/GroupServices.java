@@ -22,9 +22,10 @@ public class GroupServices {
     @Autowired
     private ValidatorEntity<Group> validator;
 
-    @Autowired
     private static final Logger logger = LoggerFactory.getLogger(GroupServices.class);
+
     private static final String MISSING_ID = "Missing id group.";
+    private static final String NOT_EXIST_ENTITY = "Doesn't exist such group";
 
 
     public List<Group> getAll() {
@@ -48,7 +49,7 @@ public class GroupServices {
         try {
             return groupDao.create(group);
         } catch (DataAccessException e) {
-            logger.error("failed to create group: {}", group, e);
+            logger.error("Failed to create group: {}", group, e);
             throw new ServiceException("Failed to create group", e);
         }
     }
@@ -63,10 +64,10 @@ public class GroupServices {
         try {
             return groupDao.delete(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing group with id={}", id);
-            throw new NoSuchEntityException("Doesn't exist such group");
+            logger.warn("Not existing group with id={}", id);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
-            logger.error("failed to delete group with id={}", id, e);
+            logger.error("Failed to delete group with id={}", id, e);
             throw new ServiceException("Failed to delete group by id", e);
         }
     }
@@ -82,8 +83,8 @@ public class GroupServices {
         try {
             group = groupDao.getById(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing group with id={}", id);
-            throw new NoSuchEntityException("Doesn't exist such group");
+            logger.warn("Not existing group with id={}", id);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("Failed to retrieve group with id={}", id, e);
             throw new ServiceException("Failed to retrieve group by id", e);
@@ -102,8 +103,8 @@ public class GroupServices {
         try {
             groupDao.getById(group.getGroupId());
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing group: {}", group);
-            throw new NoSuchEntityException("Doesn't exist such group");
+            logger.warn("Not existing group: {}", group);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("Failed to retrieve group: {}", group);
             throw new ServiceException("Failed to retrieve group from such id: ", e);
@@ -126,7 +127,7 @@ public class GroupServices {
         try {
             return groupDao.getLessonsById(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing group with id={}", id);
+            logger.warn("Not existing group with id={}", id);
             throw new NoSuchEntityException("Doesn't exist such lessons for group");
         } catch (DataAccessException e) {
             logger.error("Failed to get lessons group by such id={}", id);

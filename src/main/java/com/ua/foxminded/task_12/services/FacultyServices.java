@@ -24,9 +24,11 @@ public class FacultyServices {
 
     @Autowired
     private ValidatorEntity<Faculty> validator;
-    @Autowired
+
     private static final Logger logger = LoggerFactory.getLogger(FacultyServices.class);
+
     private static final String MISSING_ID = "Missing id faculty.";
+    private static final String NOT_EXIST_ENTITY = "Doesn't exist such faculty";
 
     public List<Faculty> getAll() {
         logger.debug("Trying to get all faculties");
@@ -49,8 +51,8 @@ public class FacultyServices {
         try {
             return facultyDao.create(faculty);
         } catch (DataAccessException e) {
-            logger.error("failed to create faculty: {}", faculty, e);
-            throw new ServiceException("Failed to create new faculty", e);
+            logger.error("Failed to create faculty: {}", faculty, e);
+            throw new ServiceException("Failed to create faculty", e);
         }
     }
 
@@ -64,8 +66,8 @@ public class FacultyServices {
         try {
             return facultyDao.delete(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing faculty with id={}", id);
-            throw new NoSuchEntityException("Doesn't exist such faculty");
+            logger.warn("Not existing faculty with id={}", id);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("failed to delete faculty with id={}", id, e);
             throw new ServiceException("Failed to delete faculty by id", e);
@@ -83,8 +85,8 @@ public class FacultyServices {
         try {
             faculty = facultyDao.getById(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing faculty with id={}", id);
-            throw new NoSuchEntityException("Doesn't exist such faculty");
+            logger.warn("Not existing faculty with id={}", id);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("Failed to retrieve faculty with id={}", id, e);
             throw new ServiceException("Failed to retrieve faculty with such id", e);
@@ -103,8 +105,8 @@ public class FacultyServices {
         try {
             facultyDao.getById(faculty.getFacultyId());
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing faculty: {}", faculty);
-            throw new NoSuchEntityException("Doesn't exist such faculty");
+            logger.warn("Not existing faculty: {}", faculty);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("Failed to retrieve faculty: {}", faculty);
             throw new ServiceException("Failed to retrieve faculty: ", e);

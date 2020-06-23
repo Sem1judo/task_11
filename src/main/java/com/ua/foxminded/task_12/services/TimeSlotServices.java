@@ -27,10 +27,10 @@ public class TimeSlotServices {
     @Autowired
     private ValidatorEntity<TimeSlot> validator;
 
-    @Autowired
     private static final Logger logger = LoggerFactory.getLogger(TimeSlotServices.class);
 
     private static final String MISSING_ID = "Missing id time slot.";
+    private static final String NOT_EXIST_ENTITY = "Doesn't exist such time slot";
 
 
     public List<TimeSlot> getAll() {
@@ -69,8 +69,8 @@ public class TimeSlotServices {
         try {
             return timeSlotDao.delete(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing time slot with id={}", id);
-            throw new NoSuchEntityException("Doesn't exist such time slot");
+            logger.warn("Not existing time slot with id={}", id);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("Failed to delete lesson with id={}", id, e);
             throw new ServiceException("Failed to delete time slot by id", e);
@@ -88,8 +88,8 @@ public class TimeSlotServices {
         try {
             timeSlot = timeSlotDao.getById(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing time slot with id={}", id);
-            throw new NoSuchEntityException("Doesn't exist such time slot");
+            logger.warn("Not existing time slot with id={}", id);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("Failed to retrieve time slot with id={}", id, e);
             throw new ServiceException("Failed to retrieve time slot by id", e);
@@ -108,8 +108,8 @@ public class TimeSlotServices {
         try {
             timeSlotDao.getById(timeSlot.getTimeSlotId());
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Is not existing time slot: {}", timeSlot);
-            throw new NoSuchEntityException("Doesn't exist such time slot");
+            logger.warn("Not existing time slot: {}", timeSlot);
+            throw new NoSuchEntityException(NOT_EXIST_ENTITY);
         } catch (DataAccessException e) {
             logger.error("Failed to retrieve time slot: {}", timeSlot, e);
             throw new ServiceException("Failed to retrieve time slot:", e);
